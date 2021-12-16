@@ -7,6 +7,75 @@ import Footer from './components/Footer.js';
 import LoginForm from './components/LoginForm.js';
 import Togglable from './components/Togglable.js';
 import NoteForm from './components/NoteForm.js';
+import { Routes, Route, Link, useMatch } from "react-router-dom";
+
+
+
+const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
+
+	return  (
+	<div>
+		{user && <Togglable buttonLabel="new note" ref={noteFormRef} >
+				<NoteForm	createNote = {createNote}	/>
+			</Togglable>}
+		<div>
+			<button onClick={() => setShowAll(!showAll)}>
+				show {showAll ? 'important' : 'all' }
+			</button>
+		</div>
+		<ul>
+		{notes.map(note =>
+			<li key={note.id}>
+			<Link to={`/notes/${note.id}`}>{note.content}</Link>
+			</li>
+		)}
+		</ul>
+	
+	</div>
+	)
+}
+
+
+
+const Home = () => (
+  <div> 
+    <h2>TKTL notes app</h2> 
+    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+		Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s,
+		when an unknown printer took a galley of type and scrambled it to make a type
+		specimen book. It has survived not only five centuries, but also the leap 
+		into electronic typesetting, remaining essentially unchanged. It was popularised in 
+		the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+		and more recently with desktop publishing software like Aldus
+		PageMaker including versions of Lorem Ipsum.</p> 
+  </div>
+)
+
+const Users = () => (
+  <div>
+    <h2>TKTL notes app</h2>
+    <ul>
+      <li>Matti Luukkainen</li>
+      <li>Juha Tauriainen</li>
+      <li>Arto Hellas</li>
+    </ul>
+  </div>
+)
+
+
+const Login = ({username, password, handleLogin, setUsername, setPassword}) => {
+	return (
+		<LoginForm
+				username={username}
+				password={password}
+				handleUsernameChange={({ target }) => setUsername(target.value)}
+				handlePasswordChange={({ target }) => setPassword(target.value)}
+				handleSubmit={handleLogin}
+		/>
+	)
+} 
+
+
 
 const App = () => {
 
@@ -18,6 +87,11 @@ const App = () => {
 	const [user, setUser] = useState(null)
 
 	const noteFormRef = useRef()
+
+	const match = useMatch('/notes/:id')
+	const note = match 
+		? notes.find(note => note.id === match.params.id)
+		: null
 	
 
 	const hook = () => {		
@@ -101,43 +175,39 @@ const App = () => {
 		}
 	}
 
+	const logOutUser = () => {
+		localStorage.removeItem('loggedNoteappUser')
+		setUser(null)
+	}
 
-
-
+	const padding = {
+		padding: 5
+	}
 
 	return (
     <div>
 		<h1>Notes</h1>
-		<Notification message={errorMessage} />
-		{!user && 
-			<Togglable buttonLabel='login'>
-				<LoginForm
-					username={username}
-					password={password}
-					handleUsernameChange={({ target }) => setUsername(target.value)}
-					handlePasswordChange={({ target }) => setPassword(target.value)}
-					handleSubmit={handleLogin}
-				/>
-			</Togglable>}
-		{user &&  
-			<div>
-				<p>{user.name} logged in</p>
-				{<Togglable buttonLabel="new note" ref={noteFormRef} >
-					<NoteForm	createNote = {createNote}	/>
-				</Togglable>}
-			</div>
-		}
 		<div>
-			<button onClick={() => setShowAll(!showAll)}>
-				show {showAll ? 'important' : 'all' }
-			</button>
+			{!user &&  <Link style={padding} to="/login">login</Link> }
+			
+			<Link style={padding} to="/">home</Link>
+			<Link style={padding} to="/notes">notes</Link>		
+			{user &&  	<Link style={padding} to="/users">users</Link> }	
+			{user &&  <span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span> }		
+		
 		</div>
-		<ul>
-			{notesToShow.map(note => 
-				<Note key={note.id} note={note} toggleImportance = {toggleImportance} />
-			)}
-		</ul>
-	
+		<Routes>
+			<Route path="/" element={<Home/>} />
+			<Route path="users" element={<Users/>}  />
+			<Route path="login" element={<Login   
+				username={username} password={password} handleLogin={handleLogin} 
+				setUsername = {setUsername} setPassword={setPassword}	/>}  />
+			<Route path="notes" element={<Notes notes={notesToShow}  user={user}
+				noteFormRef={noteFormRef} createNote={createNote}
+				showAll={showAll} setShowAll={setShowAll} />} />
+			<Route path="notes/:id" element={<Note note={note} toggleImportance = {toggleImportance} key={document.location.href} />} />
+		</Routes>
+		<Notification message={errorMessage} />	
 		<Footer  />
     </div>
   )
