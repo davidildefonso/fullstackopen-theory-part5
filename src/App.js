@@ -8,7 +8,7 @@ import LoginForm from './components/LoginForm.js';
 import Togglable from './components/Togglable.js';
 import NoteForm from './components/NoteForm.js';
 import { Routes, Route, Link, useMatch } from "react-router-dom";
-
+import { Table, Navbar, Nav } from 'react-bootstrap'
 
 
 const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
@@ -23,14 +23,18 @@ const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
 				show {showAll ? 'important' : 'all' }
 			</button>
 		</div>
-		<ul>
-		{notes.map(note =>
-			<li key={note.id}>
-			<Link to={`/notes/${note.id}`}>{note.content}</Link>
-			</li>
-		)}
-		</ul>
-	
+		<Table striped>
+			<tbody>
+				
+				{notes.map(note =>
+					<tr key={note.id}>
+						<td><Link to={`/notes/${note.id}`}>{note.content}</Link></td>
+						<td>{note.user && note.user.name}</td>
+					</tr>
+				)}
+				
+			</tbody>
+		</Table>
 	</div>
 	)
 }
@@ -166,9 +170,14 @@ const App = () => {
 			noteService.setToken(user.token)
 			setUser(user)
 			setUsername('')
-			setPassword('')
-		} catch (exception) {
-			setErrorMessage('Wrong credentials')
+			setPassword('')		
+			setErrorMessage('Sucess!', 'success')
+				setErrorMessage({ content: 'Sucess ', type: 'success' }  )
+			setTimeout(() => {
+				setErrorMessage(null)
+			}, 5000)
+		} catch (exception) {	
+			setErrorMessage({ content: 'Wrong credentials', type: 'danger' }  )
 			setTimeout(() => {
 				setErrorMessage(null)
 			}, 5000)
@@ -185,17 +194,32 @@ const App = () => {
 	}
 
 	return (
-    <div>
+    <div className="container">
 		<h1>Notes</h1>
-		<div>
-			{!user &&  <Link style={padding} to="/login">login</Link> }
-			
-			<Link style={padding} to="/">home</Link>
-			<Link style={padding} to="/notes">notes</Link>		
-			{user &&  	<Link style={padding} to="/users">users</Link> }	
-			{user &&  <span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span> }		
-		
-		</div>
+		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+			<Navbar.Collapse id="responsive-navbar-nav">
+				<Nav className="mr-auto">
+					{!user && 
+						<Nav.Link href="#" as="span">
+							<Link style={padding} to="/login">login</Link> 
+						</Nav.Link>}
+					<Nav.Link href="#" as="span">
+						<Link style={padding} to="/">home</Link>
+					</Nav.Link>
+					<Nav.Link href="#" as="span">
+						<Link style={padding} to="/notes">notes</Link>	
+					</Nav.Link>	
+					{user &&  
+						<Nav.Link href="#" as="span">
+							<Link style={padding} to="/users">users</Link> </Nav.Link> }	
+					{user && 
+						<Nav.Link href="#" as="span"> 
+							<span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span>
+						</Nav.Link>	 }
+				</Nav>		
+			</Navbar.Collapse>
+		</Navbar>
 		<Routes>
 			<Route path="/" element={<Home/>} />
 			<Route path="users" element={<Users/>}  />

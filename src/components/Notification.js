@@ -1,5 +1,5 @@
 import React  from "react";
-
+import {  Alert  } from 'react-bootstrap'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -7,9 +7,9 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className="error">
-      {message}
-    </div>
+     <Alert variant={message.type}>
+      {message.content}
+    </Alert>
   )
 }
 
