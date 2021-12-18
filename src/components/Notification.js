@@ -1,5 +1,5 @@
 import React  from "react";
-import {  Alert  } from 'react-bootstrap'
+import {  Alert  } from '@material-ui/lab'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -7,7 +7,7 @@ const Notification = ({ message }) => {
   }
 
   return (
-     <Alert variant={message.type}>
+     <Alert severity={message.type}>
       {message.content}
     </Alert>
   )

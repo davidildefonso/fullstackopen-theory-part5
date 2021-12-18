@@ -8,7 +8,18 @@ import LoginForm from './components/LoginForm.js';
 import Togglable from './components/Togglable.js';
 import NoteForm from './components/NoteForm.js';
 import { Routes, Route, Link, useMatch } from "react-router-dom";
-import { Table, Navbar, Nav } from 'react-bootstrap'
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  AppBar,
+  Button,
+  Toolbar
+} from '@material-ui/core'
 
 
 const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
@@ -23,18 +34,20 @@ const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
 				show {showAll ? 'important' : 'all' }
 			</button>
 		</div>
-		<Table striped>
-			<tbody>
-				
-				{notes.map(note =>
-					<tr key={note.id}>
-						<td><Link to={`/notes/${note.id}`}>{note.content}</Link></td>
-						<td>{note.user && note.user.name}</td>
-					</tr>
-				)}
-				
-			</tbody>
-		</Table>
+		<TableContainer component={Paper}>
+			<Table>
+				<TableBody>
+					
+					{notes.map(note =>
+						<TableRow  key={note.id}>
+							<TableCell><Link to={`/notes/${note.id}`}>{note.content}</Link></TableCell>
+							<TableCell>{note.user && note.user.name}</TableCell>
+						</TableRow >
+					)}
+					
+				</TableBody>
+			</Table>
+		</TableContainer>
 	</div>
 	)
 }
@@ -177,7 +190,7 @@ const App = () => {
 				setErrorMessage(null)
 			}, 5000)
 		} catch (exception) {	
-			setErrorMessage({ content: 'Wrong credentials', type: 'danger' }  )
+			setErrorMessage({ content: 'Wrong credentials', type: 'error' }  )
 			setTimeout(() => {
 				setErrorMessage(null)
 			}, 5000)
@@ -189,37 +202,20 @@ const App = () => {
 		setUser(null)
 	}
 
-	const padding = {
-		padding: 5
-	}
+
 
 	return (
-    <div className="container">
-		<h1>Notes</h1>
-		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
-			<Navbar.Collapse id="responsive-navbar-nav">
-				<Nav className="mr-auto">
-					{!user && 
-						<Nav.Link href="#" as="span">
-							<Link style={padding} to="/login">login</Link> 
-						</Nav.Link>}
-					<Nav.Link href="#" as="span">
-						<Link style={padding} to="/">home</Link>
-					</Nav.Link>
-					<Nav.Link href="#" as="span">
-						<Link style={padding} to="/notes">notes</Link>	
-					</Nav.Link>	
-					{user &&  
-						<Nav.Link href="#" as="span">
-							<Link style={padding} to="/users">users</Link> </Nav.Link> }	
-					{user && 
-						<Nav.Link href="#" as="span"> 
-							<span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span>
-						</Nav.Link>	 }
-				</Nav>		
-			</Navbar.Collapse>
-		</Navbar>
+	<Container>
+		<h1>Notes</h1>		
+		<AppBar position="static">
+			<Toolbar>
+				{!user &&   <Button color="inherit" component={Link} to="/login">  login  </Button>  }
+				<Button color="inherit" component={Link} to="/">  home  </Button>
+				<Button color="inherit" component={Link} to="/notes">  notes  </Button>					
+				{user &&  <Button color="inherit" component={Link} to="/users">  users  </Button>}	
+				{user &&  <span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span> }		
+			</Toolbar>
+		</AppBar>
 		<Routes>
 			<Route path="/" element={<Home/>} />
 			<Route path="users" element={<Users/>}  />
@@ -233,7 +229,7 @@ const App = () => {
 		</Routes>
 		<Notification message={errorMessage} />	
 		<Footer  />
-    </div>
+	</Container>
   )
 };
 
