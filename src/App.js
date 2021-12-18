@@ -9,17 +9,29 @@ import Togglable from './components/Togglable.js';
 import NoteForm from './components/NoteForm.js';
 import { Routes, Route, Link, useMatch } from "react-router-dom";
 import {
-  Container,
+
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
   Paper,
-  AppBar,
+ 
   Button,
-  Toolbar
+
 } from '@material-ui/core'
+import styled from 'styled-components'
+
+const Page = styled.div`
+  padding: 1em;
+  background: papayawhip;
+`
+
+const Navigation = styled.div`
+  background: BurlyWood;
+  padding: 1em;
+`
+
 
 
 const Notes = ({notes, noteFormRef, createNote, showAll, setShowAll, user}) => {
@@ -205,17 +217,16 @@ const App = () => {
 
 
 	return (
-	<Container>
+	<Page>
 		<h1>Notes</h1>		
-		<AppBar position="static">
-			<Toolbar>
-				{!user &&   <Button color="inherit" component={Link} to="/login">  login  </Button>  }
-				<Button color="inherit" component={Link} to="/">  home  </Button>
-				<Button color="inherit" component={Link} to="/notes">  notes  </Button>					
-				{user &&  <Button color="inherit" component={Link} to="/users">  users  </Button>}	
-				{user &&  <span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span> }		
-			</Toolbar>
-		</AppBar>
+		<Navigation >		
+			{!user &&   <Button color="inherit" component={Link} to="/login">  login  </Button>  }
+			<Button color="inherit" component={Link} to="/">  home  </Button>
+			<Button color="inherit" component={Link} to="/notes">  notes  </Button>					
+			{user &&  <Button color="inherit" component={Link} to="/users">  users  </Button>}	
+			{user &&  <span>{user.name} logged in  <button  onClick={logOutUser} >log out</button> </span> }	
+	
+		</Navigation>
 		<Routes>
 			<Route path="/" element={<Home/>} />
 			<Route path="users" element={<Users/>}  />
@@ -229,7 +240,7 @@ const App = () => {
 		</Routes>
 		<Notification message={errorMessage} />	
 		<Footer  />
-	</Container>
+	</Page>
   )
 };
 

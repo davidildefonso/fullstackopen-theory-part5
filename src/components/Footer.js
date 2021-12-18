@@ -1,16 +1,21 @@
 import React from 'react';
+import styled from 'styled-components'
+
+const FooterC = styled.div`
+  background: Chocolate;
+  padding: 1em;
+  margin-top: 1em;
+`
+
 
 const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
+ 
+ 
   return (
-    <div style={footerStyle}>
-      <br />
+    <FooterC >
+     
       <em>Note app, Department of Computer Science, University of Helsinki 2021</em>
-    </div>
+    </FooterC>
   )
 }
 

@@ -1,6 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {TextField , Button } from '@material-ui/core'
+import styled from 'styled-components'
+
+const Button = styled.button`
+  background: Bisque;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid Chocolate;
+  border-radius: 3px;
+`
+
+const Input = styled.input`
+  margin: 0.25em;
+`
+
+
 
 const LoginForm = ({
    handleSubmit,
@@ -15,7 +30,7 @@ const LoginForm = ({
 		<form  onSubmit={handleSubmit}>
 			<div>
 			
-				<TextField
+				<Input
 					id="username"
 					label="username" 
 					value={username}
@@ -23,7 +38,7 @@ const LoginForm = ({
 				/>
 			</div>
 			<div>	
-				<TextField
+				<Input
 					label="password" 
 					id="password"
 					type="password"
@@ -31,7 +46,7 @@ const LoginForm = ({
 					onChange={handlePasswordChange}
 				/>
 			</div>	
-			<Button id="login-button" type="submit" variant="contained" color="primary" >login</Button>
+			<Button id="login-button" type="submit"  >login</Button>
 			
 		</form >
     </div>
